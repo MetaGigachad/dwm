@@ -39,7 +39,7 @@ static const unsigned int alphas[][3]      = {
 // static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 // static const char *tags[] = { "", "", "", "", "", "♫", "⛥", "", "" };
 // static const char *tags[] = { "dev", "www", "sys", "org", "chat", "mus", "daw", "sci", "etc"};
-static const char *tags[] = { "dev1", "dev2", "www", "chat & mus", "etc"};
+static const char *tags[] = { "dev1", "dev2", "www", "chat & mus", "dev3", "zoom", "rec", "etc"};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -48,8 +48,9 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "zoom",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "zoom",     NULL,       NULL,       1 << 5,       1,           -1 },
+	{ "obs",      NULL,       NULL,       1 << 6,       0,           -1 },
+    { "Brave",    NULL,       NULL,       1 << 2,       0,           -1 }
 };
 
 /* layout(s) */
