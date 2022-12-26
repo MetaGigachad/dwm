@@ -13,13 +13,14 @@ static const char *fonts[]          = {"Ubuntu:weight=bold:size=8:antialias=true
 static const char dmenufont[]       = "Ubuntu:weight=bold:size=8:antialias=true:hinting=true";
 
 /* tokyonight colorscheme  */
-static const char col_1[]           = "#292e42"; /* background color of bar */
-static const char col_2[]           = "#282c34"; /* border color unfocused windows */
+static const char col_1[]           = "#1a1b26"; /* background color of bar */
+static const char col_2[]           = "#1a1b26"; /* border color unfocused windows */
 static const char col_3[]           = "#d7d7d7";
-static const char col_4[]           = "#9d7cd8"; /* border color focused windows and tags */
+static const char col_4[]           = "#f7768e"; /* border color focused windows and tags */
+static const char col_5[]           = "#7aa2f7"; /* blue */
 
 /* opacity */
-static const unsigned int baralpha    = 0xee;
+static const unsigned int baralpha    = 0xff;
 static const unsigned int borderalpha = OPAQUE;
 
 /* color & opacity mapping */
@@ -37,7 +38,8 @@ static const unsigned int alphas[][3]      = {
 /* tagging */
 // static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 // static const char *tags[] = { "", "", "", "", "", "♫", "⛥", "", "" };
-static const char *tags[] = { "dev", "www", "sys", "org", "chat", "mus", "daw", "sci", "etc"};
+// static const char *tags[] = { "dev", "www", "sys", "org", "chat", "mus", "daw", "sci", "etc"};
+static const char *tags[] = { "dev1", "dev2", "www", "chat & mus", "etc"};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -46,11 +48,12 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
+	{ "zoom",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.5; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
@@ -78,19 +81,14 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/zsh", "-c", cmd, NULL } }
 
 /* commands */
-#define USER_TERMINAL "kitty"
-static const char *dmenucmd[]   = { "dmenu_run", "-fn", dmenufont, "-nb", col_1, "-nf", col_3, "-sb", col_4, "-sf", col_3, NULL };
+#define USER_TERMINAL "alacritty"
+static const char *dmenucmd[]   = { "dmenu_run", "-fn", dmenufont,
+    "-h", "20",
+    "-nb", col_1, "-nf", col_3, "-sb", col_4, "-sf", col_3, NULL };
 static const char *termcmd[]    = { USER_TERMINAL, NULL };
 static const char *browsercmd[] = { "brave", NULL };
 static const char *neovimcmd[]  = { USER_TERMINAL, "nvim", NULL };
 static const char *emacscmd[]   = { "emacsclient", "-c", "-a=\"\"", NULL };
-
-static const char *volumeupcmd[]    = { "amixer", "set", "Master", "5%+", NULL };
-static const char *volumedowncmd[]  = { "amixer", "set", "Master", "5%-", NULL };
-static const char *volumetogglecmd[]   = { "amixer", "set", "Master", "toggle", NULL };
-static const char *brightnessupcmd[]   = { "brightnessctl", "set", "5%+", NULL };
-static const char *brightnessdowncmd[] = { "brightnessctl", "set", "5%-", NULL };
-static const char *switchlanguagecmd[] = { "~/.local/bin/statusbar/switch-layout.sh", NULL };
 
 static Keychord keychords[] = {
 	/* Keys                                function        argument */
@@ -102,17 +100,22 @@ static Keychord keychords[] = {
 	{1, {{MODKEY|ShiftMask, XK_b}},	       togglebar,      {0} },
 	{1, {{MODKEY, XK_j}},						       focusstack,     {.i = +1 } },
 	{1, {{MODKEY, XK_k}},						 	     focusstack,     {.i = -1 } },
-	{1, {{MODKEY, XK_i}},						 	     incnmaster,     {.i = +1 } },
+	{1, {{MODKEY|ShiftMask, XK_j}},        rotatestack,    {.i = +1 } },
+	{1, {{MODKEY|ShiftMask, XK_k}},        rotatestack,    {.i = -1 } },
+  {1, {{MODKEY, XK_i}},						 	     incnmaster,     {.i = +1 } },
 	{1, {{MODKEY, XK_d}},						 	     incnmaster,     {.i = -1 } },
 	{1, {{MODKEY, XK_h}},						 	     setmfact,       {.f = -0.05} },
 	{1, {{MODKEY, XK_l}},						 	     setmfact,       {.f = +0.05} },
 
+  /* Screenshot */
+  {1, {{MODKEY, XK_s}},                  spawn,          SHCMD("escrotum -s -C") },
+
   /* Volume & Brightness */
-  {1, {{MODKEY, XK_Down}},               spawn,          {.v = volumedowncmd} }, /*0x1008ff11*/
-  {1, {{MODKEY, XK_Up}},                 spawn,          {.v = volumeupcmd} }, /*XF86XK_AudioRaiseVolume*/
-  {1, {{MODKEY|ShiftMask, XK_m}},        spawn,          {.v = volumetogglecmd} }, /*XF86XK_AudioMute*/
-  {1, {{MODKEY|ShiftMask, XK_Down}},     spawn,          {.v = brightnessdowncmd} },
-  {1, {{MODKEY|ShiftMask, XK_Up}},       spawn,          {.v = brightnessupcmd} },
+  {1, {{MODKEY, XK_Down}},               spawn,          SHCMD("pamixer -d 5 && pkill -RTMIN+10 dwmblocks") }, /*0x1008ff11*/
+  {1, {{MODKEY, XK_Up}},                 spawn,          SHCMD("pamixer -i 5 && pkill -RTMIN+10 dwmblocks") }, /*XF86XK_AudioRaiseVolume*/
+  {1, {{MODKEY|ShiftMask, XK_m}},        spawn,          SHCMD("pamixer -t && pkill -RTMIN+10 dwmblocks") }, /*XF86XK_AudioMute*/
+  {1, {{MODKEY|ShiftMask, XK_Down}},     spawn,          SHCMD("brightnessctl set 5%-") },
+  {1, {{MODKEY|ShiftMask, XK_Up}},       spawn,          SHCMD("brightnessctl set 5%+") },
 
 //	{1, {{MODKEY, XK_Return}},						 zoom,           {0} },
 	{1, {{MODKEY, XK_Tab}},							   view,           {0} },
@@ -121,7 +124,7 @@ static Keychord keychords[] = {
 	{1, {{MODKEY, XK_f}},							     setlayout,      {.v = &layouts[1]} },
 	{1, {{MODKEY, XK_m}},							     setlayout,      {.v = &layouts[2]} },
   {1, {{MODKEY, XK_g}},                  setlayout,      {.v = &layouts[3]} },
-	{1, {{MODKEY, XK_space}},						   spawn,          SHCMD("~/.local/bin/statusbar/switch-layout.sh") },
+	{1, {{MODKEY, XK_space}},						   spawn,          SHCMD("~/.local/bin/statusbar/switch-layout.sh && pkill -RTMIN+11 dwmblocks") },
 	{1, {{MODKEY|ShiftMask, XK_space}},		 togglefloating, {0} },
 	{1, {{MODKEY, XK_0}},							     view,           {.ui = ~0 } },
 	{1, {{MODKEY|ShiftMask, XK_0}},				 tag,            {.ui = ~0 } },
@@ -129,6 +132,8 @@ static Keychord keychords[] = {
 	{1, {{MODKEY, XK_period}},						 focusmon,       {.i = +1 } },
 	{1, {{MODKEY|ShiftMask, XK_comma}},		 tagmon,         {.i = -1 } },
 	{1, {{MODKEY|ShiftMask, XK_period}},	 tagmon,         {.i = +1 } },
+	{1, {{MODKEY|ControlMask, XK_comma}},  cyclelayout,    {.i = -1 } },
+	{1, {{MODKEY|ControlMask, XK_period}}, cyclelayout,    {.i = +1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
