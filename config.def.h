@@ -19,6 +19,15 @@ static const char col_3[]           = "#d7d7d7";
 static const char col_4[]           = "#f7768e"; /* border color focused windows and tags */
 static const char col_5[]           = "#7aa2f7"; /* blue */
 
+static const char color0[]          = "#15161e";
+static const char color1[]          = "#f7768e";
+static const char color2[]          = "#9ece6a";
+static const char color3[]          = "#e0af68";
+static const char color4[]          = "#7aa2f7";
+static const char color5[]          = "#bb9af7";
+static const char color6[]          = "#7dcfff";
+static const char color7[]          = "#a9b1d6";
+
 /* opacity */
 static const unsigned int baralpha    = 0xff;
 static const unsigned int borderalpha = OPAQUE;
@@ -27,7 +36,7 @@ static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]        = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_3, col_1, col_2 },
-	[SchemeSel]  = { col_3, col_4, col_4 },
+	[SchemeSel]  = { color7, color0, col_2 },
 };
 static const unsigned int alphas[][3]      = {
 	/*               fg      bg        border     */
@@ -40,6 +49,25 @@ static const unsigned int alphas[][3]      = {
 // static const char *tags[] = { "", "", "", "", "", "♫", "⛥", "", "" };
 // static const char *tags[] = { "dev", "www", "sys", "org", "chat", "mus", "daw", "sci", "etc"};
 static const char *tags[] = { "dev1", "dev2", "www", "chat & mus", "dev3", "zoom", "rec", "etc"};
+
+static const unsigned int ulinepad	= 5;	/* horizontal padding between the underline and tag */
+static const unsigned int ulinestroke	= 2;	/* thickness / height of the underline */
+static const unsigned int ulinevoffset	= 0;	/* how far above the bottom of the bar the line should appear */
+static const int ulineall 		= 0;	/* 1 to show underline on all tags, 0 for just the active ones */
+
+static const char *tagsel[][2] = {
+	{ color1, col_1 },
+	{ color2, col_1 },
+	{ color3, col_1 },
+	{ color4, col_1 },
+	{ color5, col_1 },
+	{ color6, col_1 },
+	{ color7, col_1 },
+	{ color1, col_1 },
+	{ color2, col_1 },
+};
+
+static const unsigned int tagalpha[] = { OPAQUE, baralpha };
 
 static const Rule rules[] = {
 	/* xprop(1):
