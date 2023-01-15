@@ -65,9 +65,9 @@ static const unsigned int alphas[][3]      = {
 // static const char *tags[] = { "dev", "www", "sys", "org", "chat", "mus", "daw", "sci", "etc"};
 static const char *tags[] = { "dev1", "dev2", "www", "chat & mus", "dev3", "zoom", "rec", "etc"};
 
-static const unsigned int ulinepad	= 5;	/* horizontal padding between the underline and tag */
+static const unsigned int ulinepad	= 10;	/* horizontal padding between the underline and tag */
 static const unsigned int ulinestroke	= 2;	/* thickness / height of the underline */
-static const unsigned int ulinevoffset	= 0;	/* how far above the bottom of the bar the line should appear */
+static const unsigned int ulinevoffset	= 4;	/* how far above the bottom of the bar the line should appear */
 static const int ulineall 		= 0;	/* 1 to show underline on all tags, 0 for just the active ones */
 
 static const char *tagsel[][2] = {
@@ -99,7 +99,7 @@ static const Rule rules[] = {
 /* layout(s) */
 static const float mfact     = 0.5; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 #include "grid.c"
@@ -129,6 +129,7 @@ static const Layout layouts[] = {
 static const char *dmenucmd[]   = { "dmenu_run", "-fn", dmenufont,
     "-h", "20",
     "-nb", col_1, "-nf", col_3, "-sb", col_4, "-sf", col_3, NULL };
+static const char *roficmd[]    = { "rofi", "-show", "drun", NULL };
 static const char *termcmd[]    = { USER_TERMINAL, NULL };
 static const char *browsercmd[] = { "brave", NULL };
 static const char *neovimcmd[]  = { USER_TERMINAL, "nvim", NULL };
@@ -136,7 +137,7 @@ static const char *emacscmd[]   = { "emacsclient", "-c", "-a=\"\"", NULL };
 
 static Keychord keychords[] = {
 	/* Keys                                function        argument */
-	{1, {{MODKEY|ShiftMask, XK_Return}},   spawn,          {.v = dmenucmd } },
+	{1, {{MODKEY|ShiftMask, XK_Return}},   spawn,          {.v = roficmd } },
 	{1, {{MODKEY, XK_Return}},             spawn,          {.v = termcmd } },
 	{1, {{MODKEY, XK_e}},	                 spawn,          {.v = neovimcmd} },
 	{1, {{MODKEY|ShiftMask, XK_e}},	       spawn,          {.v = emacscmd} },
